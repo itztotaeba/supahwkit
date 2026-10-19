@@ -1,6 +1,18 @@
+/*
+ * ============================================================================
+ * plugins {} - blok paling atas build file: mendaftarkan "otak" pembangun modul.
+ * ============================================================================
+ * android-application : plugin resmi Gradle untuk modul aplikasi Android (APK).
+ * kotlin-compose      : plugin Compose Compiler bawaan Kotlin 2.x.
+ * kotlin-parcelize    : NEW di PR ini -> menggenerasi kode Parcelable otomatis.
+ *      Cukup beri anotasi @Parcelize pada data class, plugin membuat isi
+ *      CREATOR/writeToParcel() untuk kita (tanpa menulis boilerplate manual).
+ * ============================================================================
+ */
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
@@ -76,6 +88,19 @@ dependencies {
 
     // ===== AndroidX dasar =====
     implementation(libs.androidx.core.ktx)
+
+    /*
+     * ======================================================================
+     * HUAWEI ACCOUNT KIT (artefak: com.huawei.hms:hwid)
+     * ======================================================================
+     * Memberi akses ke HuaweiIdAuthService untuk:
+     *   - signIn()      : membuka halaman login Huawei ID (consent screen)
+     *   - silentSignIn(): mencoba restore sesi lama tanpa UI (auto-login)
+     *   - signOut()     : mengakhiri sesi
+     * Hasilnya berupa HuaweiIdAuthResult yang memuat profil pengguna
+     * (openID, display name, avatar URI, dan unionID bila diminta).
+     */
+    implementation(libs.huawei.hwid)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)

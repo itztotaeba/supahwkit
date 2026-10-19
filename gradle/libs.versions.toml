@@ -12,6 +12,11 @@ espressoCore = "3.7.0"
 composeBom = "2024.10.01"
 activityCompose = "1.9.3"
 
+# ===== Huawei Mobile Services (HMS) Core SDK =====
+# hwid = artefak Account Kit (Huawei ID). Versi 6.x adalah garis stabil yang
+# direkomendasikan dokumentasi resmi (https://developer.huawei.com/consumer/en/hms/).
+hmsCore = "6.15.0.300"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -30,8 +35,20 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
 
+# ===== Huawei Mobile Services =====
+# com.huawei.hms:hwid = Account Kit. Menyediakan kelas:
+#   - HuaweiIdAuthService  : signIn / silentSignIn / signOut
+#   - HuaweiIdAuthParams   : konfigurasi scope (profil, email, openID, dst)
+#   - HuaweiIdAuthResult   : hasil autentikasi (status + profil + token)
+# Artefak ini TIDAK ada di mavenCentral/google - hanya di repo resmi Huawei
+# (lihat settings.gradle.kts -> maven("https://developer.huawei.com/repo/")).
+huawei-hwid = { group = "com.huawei.hms", name = "hwid", version.ref = "hmsCore" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+# kotlin-parcelize: menghasilkan implementasi Parcelable dari anotasi @Parcelize.
+# Dipakai oleh UserProfile agar objek profil bisa dikirim antar-Activity via Intent.
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 

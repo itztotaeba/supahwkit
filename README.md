@@ -7,7 +7,7 @@ Aplikasi ini adalah dashboard berisi 8 menu; setiap menu menuju halaman demo imp
 
 | # | Kit | Fungsi | Status |
 |---|-----|--------|--------|
-| 1 | Account Kit | Sign in dengan Huawei ID | 🔜 Dashboard ready, demo menyusul |
+| 1 | Account Kit | Sign in dengan Huawei ID | ✅ Login + halaman profil (PR ini) |
 | 2 | Location Kit | Koordinat lokasi perangkat | 🔜 |
 | 3 | Map Kit | Peta interaktif & marker | 🔜 |
 | 4 | Push Kit | Notifikasi push server → device | 🔜 |
@@ -27,20 +27,40 @@ Aplikasi ini adalah dashboard berisi 8 menu; setiap menu menuju halaman demo imp
   - `MainActivity`/`KitDetailActivity` : kini hanya *host* Compose (`setContent`), navigasi tetap via Intent
   - Katalog data (`KitCatalog`) tidak berubah → tambah kit baru tetap cukup 1 entri data
 - ⬜ Step 2 — Setup HMS SDK (AGC config, appid meta-data, dependencies per kit)
-- ⬜ Step 3+ — Implementasi demo tiap kit satu per satu di `DemoSlot`
+- ✅ **Step 3 — Huawei Account Kit** (PR ini)
+  - Dependensi `com.huawei.hms:hwid` + repo maven Huawei (`settings.gradle.kts`)
+  - `HuaweiAccountService` : pembungkus API SDK (signIn intent, silent sign-in,
+    parse hasil, sign out, cache sesi) — UI tidak menyentuh SDK langsung
+  - `AccountKitScreen` : state machine login (Idle/Loading/SignedIn/Error) dengan
+    `rememberLauncherForActivityResult` ala activity-result modern
+  - `UserProfile` kini `@Parcelize` (plugin `kotlin-parcelize`) → dikirim utuh
+    antar Activity lewat Intent extra
+  - **Halaman Profil** (`ProfileActivity` + `ProfileScreen`) = bukti visual login:
+    menampilkan displayName, OpenID, UnionID, email & avatar URI asli dari
+    Huawei ID; empty state aman bila dibuka tanpa sesi
+  - Routing slot demo: `KitDetailScreen(demoContent = ...)` diisi per-kit —
+    ACCOUNT → AccountKitScreen, kit lain tetap placeholder
+  - Badge status halaman detail kini dinamis dari `kit.status` (DONE/PARTIAL/PLANNED)
+  - ⚠️ Saat runtime: ganti/fill `agconnect-services.json` + `appid` dari proyek
+    AGC milikmu, dan aktifkan *Account Kit* di konsol, agar login nyata muncul
+- ⬜ Step 4+ — Implementasi demo kit berikutnya satu per satu di slot `demoContent`
 
 ## Arsitektur
 
 ```
 com.kinyo.supahwkit
-├── data/model        → HmsKit.kt (model + enum KitId + KitCatalog)
+├── data
+│   ├── model     → HmsKit.kt (model + enum KitId + KitCatalog), UserProfile.kt (@Parcelize)
+│   └── remote    → HuaweiAccountService.kt (pembungkus HMS hwid: scopes, Task->outcome)
 └── ui
-    ├── theme         → Color.kt, Type.kt, Theme.kt (Material 3)
-    ├── components    → KitCard.kt (komponen kartu reusable)
-    ├── dashboard     → MainActivity (host) + DashboardScreen (grid menu)
-    └── kit           → KitDetailActivity (host) + KitDetailScreen (shell demo)
+    ├── theme      → Color.kt, Type.kt, Theme.kt (Material 3)
+    ├── components → KitCard.kt (komponen kartu reusable)
+    ├── dashboard  → MainActivity (host) + DashboardScreen (grid menu)
+    ├── kit        → KitDetailActivity (host+routing) + KitDetailScreen (shell demo)
+    ├── account    → AccountKitScreen.kt (demo login Huawei ID)
+    └── profile    → ProfileActivity (host) + ProfileScreen (bukti hasil login)
 ```
 
-Flow logika: **buka app → MainActivity.setContent → DashboardScreen render KitCatalog di LazyVerticalGrid → klik KitCard → callback ke Activity → Intent(EXTRA_KIT_ID) → KitDetailActivity resolve enum → KitDetailScreen tampilkan shell demo kit.**
+Flow logika Account Kit: **Dashboard → klik "Account Kit" → KitDetailActivity mendeteksi `KitId.ACCOUNT` → render `AccountKitScreen` di slot demo → tombol masuk → `service.buildSignInIntent()` → launcher halaman Huawei ID → hasil di-`parse` service → `AuthOutcome.Success(profile)` → `onLoginSuccess` → `ProfileActivity` (Intent Parcelable) → `ProfileScreen` tampilkan identitas asli pengguna.**
 
 > Seluruh kode diberi komentar penjelasan berbahasa Indonesia karena proyek ini dibuat untuk belajar — setiap baris penting punya alasan yang tertulis di kodenya.

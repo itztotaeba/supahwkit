@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kinyo.supahwkit.R
 import com.kinyo.supahwkit.data.model.HmsKit
+import com.kinyo.supahwkit.data.model.KitStatus
 import com.kinyo.supahwkit.data.model.KitCatalog
 import com.kinyo.supahwkit.ui.theme.SupaHWKitTheme
 
@@ -60,7 +61,17 @@ import com.kinyo.supahwkit.ui.theme.SupaHWKitTheme
 @Composable
 fun KitDetailScreen(
     kit: HmsKit?,                 // nullable: antisipasi extra Intent rusak/hilang
-    onNavigateBack: () -> Unit    // callback -> Activity memanggil finish()
+    onNavigateBack: () -> Unit,   // callback -> Activity memanggil finish()
+    /*
+     * demoContent - SLOT komposable yang diisi oleh Activity pemanggil.
+     * Tipenya `(@Composable () -> Unit)?` = lambda Compose yang boleh null.
+     *  - null      -> tampilkan placeholder "belum diimplementasi" (DemoSlot)
+     *  - bukan null -> render isi kit asli (misal AccountKitScreen)
+     * Kenapa lewat parameter, bukan when(kit.id) di dalam screen?
+     *  -> Screen tetap murni UI; keputusan "kit X pakai composable Y" adalah
+     *     tanggung jawab navigasi/Activity. Ini menjaga lapisan UI mudah dites.
+     */
+    demoContent: (@Composable () -> Unit)? = null,
 ) {
     // Guard clause: kalau data kit tidak valid, tampilkan layar error kecil.
     if (kit == null) {
@@ -139,11 +150,32 @@ fun KitDetailScreen(
             )
 
             // ===== Badge status implementasi =====
-            // Pill kecil memberi tahu progress belajar: belum/berjalan/selesai.
-            StatusBadge(text = stringResource(R.string.status_not_implemented))
+            /*
+             * Status kini DINAMIS dari model kit (kit.status), bukan teks tetap.
+             * when() memetakan enum KitStatus -> resource string badge.
+             * Account Kit sekarang PARTIAL/DONE sehingga badge langsung berubah
+             * tanpa menyentuh kode UI lain.
+             */
+            StatusBadge(
+                text = when (kit.status) {
+                    KitStatus.DONE    -> stringResource(R.string.status_done)
+                    KitStatus.PARTIAL -> stringResource(R.string.status_partial)
+                    KitStatus.PLANNED -> stringResource(R.string.status_not_implemented)
+                }
+            )
 
-            // ===== SLOT DEMO KIT (nanti diisi MapView, tombol token, dst) =====
-            DemoSlot(kit = kit)
+            // ===== SLOT DEMO KIT =====
+            if (demoContent != null) {
+                /*
+                 * Kit sudah punya implementasi nyata -> panggil lambda slot.
+                 * `demoContent()` berarti "render composable yang dititipkan
+                 * Activity" (untuk ACCOUNT = AccountKitScreen).
+                 */
+                demoContent()
+            } else {
+                // Belum ada implementasi -> tampilkan placeholder kerangka.
+                DemoSlot(kit = kit)
+            }
         }
     }
 }

@@ -21,6 +21,38 @@
 
     <!-- Status halaman detail -->
     <string name="status_not_implemented">Status: belum diimplementasikan</string>
+    <!-- Badge status dinamis (PR Account Kit): dipakai when(kit.status) di KitDetailScreen -->
+    <string name="status_partial">Status: sebagian fungsi berjalan</string>
+    <string name="status_done">Status: terimplementasi ✓</string>
+
+    <!-- ======================================================================
+         STRINGS ACCOUNT KIT (PR ini)
+         Semua teks UI disimpan di resource, bukan hard-code di Compose, agar:
+         1) mudah diterjemahkan (buat values-id/, values-en/ nanti),
+         2) stringResource() ikut memicu recomposition saat konfigurasi berubah.
+         ====================================================================== -->
+    <string name="account_checking_session">Memeriksa sesi Huawei ID tersimpan…</string>
+    <string name="account_not_signed_title">Belum masuk dengan Huawei ID</string>
+    <string name="account_not_signed_desc">Tekan tombol di bawah untuk membuka halaman login resmi Huawei. Aplikasi hanya menerima profil sesuai scope yang kamu setujui (profil &amp; email).</string>
+    <string name="account_btn_sign_in">Masuk dengan Huawei ID</string>
+    <string name="account_btn_view_profile">Lihat Profil</string>
+    <string name="account_btn_sign_out">Keluar</string>
+    <string name="account_btn_retry">Coba lagi</string>
+    <string name="account_no_name">(tanpa nama)</string>
+    <string name="account_no_openid">openID tidak tersedia</string>
+    <string name="account_err_generic">Autentikasi gagal. Pastikan HMS Service aktif &amp; aplikasi terdaftar di AppGallery Connect.</string>
+    <string name="account_err_canceled">Login dibatalkan.</string>
+
+    <!-- ===== Halaman Profil (bukti login Account Kit) ===== -->
+    <string name="profile_title">Profil Huawei ID</string>
+    <string name="profile_login_success">✓ Login Account Kit berhasil — data di bawah berasal langsung dari Huawei ID</string>
+    <string name="profile_label_openid">Open ID</string>
+    <string name="profile_label_unionid">Union ID</string>
+    <string name="profile_label_email">Email</string>
+    <string name="profile_label_avatar">Avatar URI</string>
+    <string name="profile_footer_note">OpenID unik per aplikasi; UnionID sama untuk semua aplikasi satu developer. Tidak ada field? Berarti scope-nya tidak disetujui pengguna saat consent.</string>
+    <string name="profile_empty_title">Belum ada akun terdeteksi</string>
+    <string name="profile_empty_desc">Halaman profil dibuka tanpa sesi login valid. Masuk dulu lewat kartu Account Kit, lalu buka profil kembali.</string>
     <string name="detail_not_implemented">Demo implementasi untuk %1$s belum dibuat.\n\nHalaman ini adalah kerangka (shell) yang disiapkan sebagai titik masuk. Pada tahap berikutnya, area demo akan diisi contoh pemakaian nyata kit tersebut (misalnya MapView untuk Map Kit atau tombol ambil push token untuk Push Kit).</string>
     <string name="detail_kit_not_found">Kit tidak dikenali. Silakan buka kembali dari dashboard.</string>
 

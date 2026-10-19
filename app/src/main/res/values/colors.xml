@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ============================================================================
+  colors.xml - Palet warna aplikasi.
+  ============================================================================
+  Warna dasar tema (purple/teal) bawaan template Android Studio dipertahankan,
+  lalu ditambahkan: warna latar dashboard + "brand color" tiap HMS Kit.
+  Konsentrasi warna di satu file = mudah re-theming & hindari hardcode warna
+  tersebar di layout/kode.
+  -->
 <resources>
+    <!-- ===== Warna dasar tema Material (dari template awal) ===== -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -7,4 +17,18 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- ===== Warna struktural dashboard ===== -->
+    <color name="dashboard_background">#FFF2F3F7</color> <!-- abu terang bersih -->
+    <color name="header_gradient">#FF6200EE</color>       <!-- header unar khas tema -->
+
+    <!-- ===== Brand color per HMS Kit (diambil dari palet branding Huawei demo) ===== -->
+    <color name="kit_account">#FF4A90D9</color>   <!-- biru: identitas/akun -->
+    <color name="kit_location">#FFE94E45</color>  <!-- merah: pin lokasi -->
+    <color name="kit_map">#FF34A853</color>       <!-- hijau: peta -->
+    <color name="kit_push">#FFF5A623</color>      <!-- oranye: notifikasi -->
+    <color name="kit_scan">#FF7B61FF</color>      <!-- ungu: scanner -->
+    <color name="kit_text">#FF00B8A9</color>      <!-- teal: teks/OCR -->
+    <color name="kit_safety">#FFD35400</color>    <!-- jago gelap: keamanan -->
+    <color name="kit_fido">#FF2C3E50</color>      <!-- navy: biometrik -->
 </resources>

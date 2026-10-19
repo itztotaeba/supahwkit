@@ -1,3 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ============================================================================
+  strings.xml - Seluruh teks UI terpusat di sini (best practice Android).
+  ============================================================================
+  Alasan tidak hardcode text di layout:
+  1. Siap untuk lokalisasi (buat values-id/, values-en/ berisi terjemahan).
+  2. Edit teks cukup satu tempat.
+  %1$d / %1$s adalah placeholder format string yang diisi dari kode Kotlin
+  lewat getString(R.string.xxx, argumen).
+  -->
 <resources>
     <string name="app_name">Supa HW Kit</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">Supa HW Kit</string>
+    <string name="dashboard_subtitle">Kumpulan contoh implementasi Huawei Mobile Services — pilih salah satu kit di bawah (%1$d menu)</string>
+
+    <!-- Halaman detail kit -->
+    <string name="detail_not_implemented">Demo implementasi untuk %1$s belum dibuat.\n\nHalaman ini adalah kerangka (shell) yang disiapkan sebagai titik masuk. Pada tahap berikutnya, bagian containerDemo akan diisi contoh pemakaian nyata kit tersebut (misalnya MapView untuk Map Kit atau tombol ambil push token untuk Push Kit).</string>
 </resources>

@@ -53,6 +53,18 @@
             android:exported="false"
             android:parentActivityName=".ui.dashboard.MainActivity" />
 
+        <!-- ===== ProfileActivity: bukti hasil login Huawei Account Kit =====
+             (PENAMBAHAN PR ACCOUNT KIT)
+             Dibuka dari KitDetailActivity setelah login sukses, membawa objek
+             UserProfile via extra Parcelable ("extra_user_profile").
+             parentActivityName tetap MainActivity agar panah up-navigation
+             konsisten; namun back button UI memanggil finish() sehingga user
+             kembali ke halaman kit tempat ia berasal. -->
+        <activity
+            android:name=".ui.profile.ProfileActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.kit.KitDetailActivity" />
+
     </application>
 
 </manifest>

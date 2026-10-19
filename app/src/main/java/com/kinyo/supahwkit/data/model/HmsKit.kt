@@ -7,6 +7,22 @@ import com.kinyo.supahwkit.R
 
 /**
  * ============================================================================
+ * KitStatus - Tingkat kesiapan implementasi sebuah kit di aplikasi ini.
+ * ============================================================================
+ * Dipakai dashboard & halaman detail untuk menampilkan badge progress:
+ *  - PLANNED : baru direncanakan (halaman masih kerangka kosong)
+ *  - PARTIAL : sebagian fungsi sudah jalan, sisanya menyusul
+ *  - DONE    : contoh penggunaan utama sudah terimplementasi penuh
+ * Menambah nilai baru di sini tidak merusak kode lain karena pemanggilan
+ * selalu lewat when(kit.status) dengan else / semua cabang tercover.
+ * ============================================================================
+ */
+enum class KitStatus {
+    PLANNED, PARTIAL, DONE
+}
+
+/**
+ * ============================================================================
  * KitId - Enum identitas setiap HMS Kit.
  * ============================================================================
  * Kita pakai enum (bukan string bebas) supaya:
@@ -45,7 +61,13 @@ data class HmsKit(
     @param:StringRes val descriptionRes: Int, // deskripsi singkat satu baris
     @param:StringRes val taglineRes: Int,     // kalimat pembuka di halaman detail
     @param:DrawableRes val iconRes: Int,      // ikon vector kit
-    @param:ColorRes val colorRes: Int         // warna brand/aksen kit
+    @param:ColorRes val colorRes: Int,        // warna brand/aksen kit
+    /*
+     * status: progress implementasi kit ini di aplikasi.
+     * Default PLANNED supaya saat menambah kit baru kita tidak wajib
+     * menulis field-nya; nilai diubah manual ketika demonya jadi dibuat.
+     */
+    val status: KitStatus = KitStatus.PLANNED,
 )
 
 /**
@@ -68,13 +90,16 @@ object KitCatalog {
     val items: List<HmsKit> = listOf(
 
         // 1. ACCOUNT KIT - login memakai akun Huawei (Huawei ID).
+        //    Status DONE: sign-in/silent-sign-in/sign-out + halaman profil
+        //    sudah terimplementasi (lihat ui/account & ui/profile).
         HmsKit(
             id = KitId.ACCOUNT,
             titleRes = R.string.kit_account_title,
             descriptionRes = R.string.kit_account_desc,
             taglineRes = R.string.kit_account_tagline,
             iconRes = R.drawable.ic_account,
-            colorRes = R.color.kit_account
+            colorRes = R.color.kit_account,
+            status = KitStatus.DONE
         ),
 
         // 2. LOCATION KIT - posisi perangkat gabungan GPS + jaringan + iBeacon.

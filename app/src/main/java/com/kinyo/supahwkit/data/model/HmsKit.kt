@@ -2,80 +2,77 @@ package com.kinyo.supahwkit.data.model
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import com.kinyo.supahwkit.R
 
 /**
  * ============================================================================
- * HmsKit.kt - Model data untuk merepresentasikan satu Huawei Mobile Services (HMS) Kit.
+ * KitId - Enum identitas setiap HMS Kit.
  * ============================================================================
- *
- * KONSEP:
- * Kelas ini adalah "data class", yaitu kelas Kotlin yang fokus menyimpan data.
- * Kita membuatnya `data class` agar otomatis mendapat method berguna seperti:
- *  - equals()/hashCode()  : membandingkan isi dua objek
- *  - copy()               : menyalin objek dengan modifikasi sebagian
- *  - toString()           : tampilan teks otomatis untuk debugging
- *
- * Setiap item di dashboard (Account, Location, Map, dst) akan dibuat sebagai
- * satu objek HmsKit. Jadi dashboard pada dasarnya hanya menampilkan List<HmsKit>.
- *
- * PENJELASAN PARAMETER KONSTRUKTOR:
- *  - id          : Penanda unik kit, dipakai untuk routing (menentukan Activity
- *                  mana yang dibuka saat card diklik). Pakai enum supaya tidak
- *                  ada typo string dan refactor lebih aman.
- *  - title       : Nama kit yang tampil besar di card (contoh: "Map Kit").
- *  - description : Penjelasan singkat fungsi kit, tampil di bawah title.
- *  - iconRes     : Resource ID ikon (vector drawable) untuk sisi kiri card.
- *                  @DrawableRes memastikan yang kita passing hanyalah resource
- *                  gambar - jika salah ketik, compiler langsung memberi error.
- *  - colorRes    : Resource ID warna aksen untuk ikon/card tiap kit, supaya
- *                  setiap menu punya identitas visual berbeda.
+ * Kita pakai enum (bukan string bebas) supaya:
+ *  - tidak ada typo saat routing (salah ketik = error kompilasi, bukan crash)
+ *  - refactor aman: kalau nama kit diganti, semua pemakai ikut terdeteksi IDE
+ * valueOf(name) dipakai untuk mengubah string extra Intent kembali ke enum.
  * ============================================================================
  */
 enum class KitId {
     ACCOUNT,          // Huawei ID / Account Kit        -> sign-in & profil pengguna
-    LOCATION,         // Location Kit                   -> perangkat positioning (GPS/network)
-    MAP,              // Map Kit                        -> Menampilkan peta & marker
-    PUSH,             // Push Kit                       -> notifikasi push dari server Huawei
+    LOCATION,         // Location Kit                   -> positioning GPS/network/iBeacon
+    MAP,              // Map Kit                        -> menampilkan peta & marker
+    PUSH,             // Push Kit                       -> notifikasi push via Huawei server
     SCAN,             // Scan Kit                       -> scan barcode / QR code via kamera
     TEXT_RECOGNITION, // Text Recognition Kit (ML)      -> OCR: baca teks dari gambar
-    SAFETY_DETECT,    // Safety Detect                  -> deteksi risiko perangkat/root/emulator
-    FIDO              // FIDO (Biometric) Login Kit     -> autentikasi sidik jari / face unlock
+    SAFETY_DETECT,    // Safety Detect                  -> deteksi root/emulator/integritas
+    FIDO              // FIDO (Biometric) Login Kit     -> autentikasi sidik jari / wajah
 }
 
+/**
+ * ============================================================================
+ * HmsKit - Model data satu menu kit di dashboard.
+ * ============================================================================
+ * `data class` Kotlin otomatis menyediakan equals()/hashCode()/copy()/toString()
+ * yang sangat berguna di Jetpack Compose: ketika objek dianggap "sama" oleh
+ * equals(), Compose bisa melewat proses render ulang (smart recomposition),
+ * sehingga UI lebih efisien.
+ *
+ * Semua field memakai resource ID (@StringRes/@DrawableRes/@ColorRes), BUKAN
+ * nilai hardcoded, supaya teks mudah dilokalisasi dan tema gampang diubah.
+ * ============================================================================
+ */
 data class HmsKit(
-    val id: KitId,                       // identitas kit untuk keperluan navigasi
-    val title: String,                   // judul yang ditampilkan pada card
-    val description: String,             // sub-judul / penjelasan singkat
-    @param:DrawableRes val iconRes: Int, // resource ikon (misal R.drawable.ic_map)
-    @param:ColorRes val colorRes: Int    // resource warna aksen kit tersebut
+    val id: KitId,                            // kunci navigasi -> halaman detail
+    @param:StringRes val titleRes: Int,       // judul kit (dari strings.xml)
+    @param:StringRes val descriptionRes: Int, // deskripsi singkat satu baris
+    @param:StringRes val taglineRes: Int,     // kalimat pembuka di halaman detail
+    @param:DrawableRes val iconRes: Int,      // ikon vector kit
+    @param:ColorRes val colorRes: Int         // warna brand/aksen kit
 )
 
 /**
  * ============================================================================
- * KIT_CATALOG - Daftar (katalog) seluruh HMS Kit yang akan ditampilkan dashboard.
+ * KitCatalog - "Single source of truth" daftar seluruh kit.
  * ============================================================================
+ * Tambah kit baru cukup menambah satu item di list ini - dashboard
+ * (LazyVerticalGrid) otomatis menyesuaikan karena merender berdasarkan jumlah
+ * elemen list, bukan jumlah card yang ditulis manual seperti versi XML dulu.
  *
- * Ini adalah "single source of truth": satu tempat yang berisi definisi semua
- * menu aplikasi. Jika nanti ingin menambah kit baru (misal ML Kit atau IAP),
- * cukup tambahkan satu baris di list ini - UI tidak perlu diubah sama sekali
- * karena RecyclerView merender berdasarkan jumlah item di list ini.
- *
- * `object` di Kotlin = singleton (hanya ada 1 instance seumur proses aplikasi),
- * cocok untuk katalog statis seperti ini. Aksesnya: KitCatalog.items
- *
- * Urutan item di list = urutan tampilan card di dashboard.
+ * `object` = singleton Kotlin (hanya ada 1 instance seumur proses aplikasi),
+ * cocok untuk katalog statis. Akses: KitCatalog.items
  * ============================================================================
  */
 object KitCatalog {
+
+    /** Extra key yang dipakai MainActivity -> KitDetailActivity lewat Intent. */
+    const val EXTRA_KIT_ID = "extra_kit_id"
 
     val items: List<HmsKit> = listOf(
 
         // 1. ACCOUNT KIT - login memakai akun Huawei (Huawei ID).
         HmsKit(
             id = KitId.ACCOUNT,
-            title = "Account Kit",
-            description = "Sign in dengan Huawei ID & ambil profil pengguna",
+            titleRes = R.string.kit_account_title,
+            descriptionRes = R.string.kit_account_desc,
+            taglineRes = R.string.kit_account_tagline,
             iconRes = R.drawable.ic_account,
             colorRes = R.color.kit_account
         ),
@@ -83,8 +80,9 @@ object KitCatalog {
         // 2. LOCATION KIT - posisi perangkat gabungan GPS + jaringan + iBeacon.
         HmsKit(
             id = KitId.LOCATION,
-            title = "Location Kit",
-            description = "Peroleh koordinat lokasi perangkat (GPS & network)",
+            titleRes = R.string.kit_location_title,
+            descriptionRes = R.string.kit_location_desc,
+            taglineRes = R.string.kit_location_tagline,
             iconRes = R.drawable.ic_location,
             colorRes = R.color.kit_location
         ),
@@ -92,8 +90,9 @@ object KitCatalog {
         // 3. MAP KIT - rendering peta Huawei (HMS Map Service).
         HmsKit(
             id = KitId.MAP,
-            title = "Map Kit",
-            description = "Tampilkan peta interaktif, marker, dan camera",
+            titleRes = R.string.kit_map_title,
+            descriptionRes = R.string.kit_map_desc,
+            taglineRes = R.string.kit_map_tagline,
             iconRes = R.drawable.ic_map,
             colorRes = R.color.kit_map
         ),
@@ -101,8 +100,9 @@ object KitCatalog {
         // 4. PUSH KIT - kirim pesan/notifikasi remote lewat Huawei Push Server.
         HmsKit(
             id = KitId.PUSH,
-            title = "Push Kit",
-            description = "Token device & terima notifikasi push dari server",
+            titleRes = R.string.kit_push_title,
+            descriptionRes = R.string.kit_push_desc,
+            taglineRes = R.string.kit_push_tagline,
             iconRes = R.drawable.ic_push,
             colorRes = R.color.kit_push
         ),
@@ -110,8 +110,9 @@ object KitCatalog {
         // 5. SCAN KIT - scanner barcode/QR default maupun custom view.
         HmsKit(
             id = KitId.SCAN,
-            title = "Scan Kit",
-            description = "Scan barcode / QR code melalui kamera",
+            titleRes = R.string.kit_scan_title,
+            descriptionRes = R.string.kit_scan_desc,
+            taglineRes = R.string.kit_scan_tagline,
             iconRes = R.drawable.ic_scan,
             colorRes = R.color.kit_scan
         ),
@@ -119,8 +120,9 @@ object KitCatalog {
         // 6. TEXT RECOGNITION KIT - machine learning OCR on-device.
         HmsKit(
             id = KitId.TEXT_RECOGNITION,
-            title = "Text Recognition Kit",
-            description = "Kenali teks dari foto/gambar secara on-device (OCR)",
+            titleRes = R.string.kit_text_title,
+            descriptionRes = R.string.kit_text_desc,
+            taglineRes = R.string.kit_text_tagline,
             iconRes = R.drawable.ic_text,
             colorRes = R.color.kit_text
         ),
@@ -128,8 +130,9 @@ object KitCatalog {
         // 7. SAFETY DETECT - deteksi ancaman keamanan perangkat.
         HmsKit(
             id = KitId.SAFETY_DETECT,
-            title = "Safety Detect",
-            description = "Deteksi root, emulator, & integritas aplikasi",
+            titleRes = R.string.kit_safety_title,
+            descriptionRes = R.string.kit_safety_desc,
+            taglineRes = R.string.kit_safety_tagline,
             iconRes = R.drawable.ic_safety,
             colorRes = R.color.kit_safety
         ),
@@ -137,10 +140,17 @@ object KitCatalog {
         // 8. FIDO - Fast Identity Online: biometric login (sidik jari/wajah).
         HmsKit(
             id = KitId.FIDO,
-            title = "FIDO Biometric",
-            description = "Autentikasi biometrik sidik jari / wajah",
+            titleRes = R.string.kit_fido_title,
+            descriptionRes = R.string.kit_fido_desc,
+            taglineRes = R.string.kit_fido_tagline,
             iconRes = R.drawable.ic_fido,
             colorRes = R.color.kit_fido
         )
     )
+
+    /**
+     * Ambil model kit berdasarkan enum id.
+     * firstOrNull dipakai agar tidak crash walau suatu saat ada enum tanpa data.
+     */
+    fun find(id: KitId): HmsKit? = items.firstOrNull { it.id == id }
 }

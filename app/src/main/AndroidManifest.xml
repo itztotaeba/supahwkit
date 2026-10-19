@@ -11,10 +11,16 @@
   CATATAN HMS: Ketika nanti kita menambah dependensi HMS Kit (misal Map/Push),
   Huawei biasanya meminta <meta-data com.huawei.hms.client.appid> diisi App ID
   dari AGC (AppGallery Connect). Kita akan menambahkannya saat setup SDK.
+
+  CATATAN COMPOSE: Kedua activity memakai theme Material NoActionBar karena
+  app bar digambar sendiri oleh Compose (TopAppBar) - tidak butuh ActionBar
+  bawaan sistem.
   ============================================================================
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- enableEdgeToEdge / status bar transparan ditangani di ui/theme/Theme.kt -->
 
     <application
         android:allowBackup="true"

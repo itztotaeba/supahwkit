@@ -91,6 +91,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
-    // Viewer interaktif untuk uji UI Compose di device/instrumentation test.
+    // Test framework Compose: findNode/findChildByTestId untuk instrumented test UI.
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    // Manifest tambahan agar komponen test (AndroidComposeTestActivity) terdaftar
+    // hanya pada build variant debug.
     debugImplementation(libs.androidx.ui.test.manifest)
 }

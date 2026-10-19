@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ============================================================================
+  AndroidManifest.xml - "KTP" aplikasi Android.
+  ============================================================================
+  File ini mendeklarasikan ke sistem OS:
+  - component apa saja yang ada (Activity, Service, Receiver, dst)
+  - permission yang diminta aplikasi
+  - icon, label, dan theme default
+
+  CATATAN HMS: Ketika nanti kita menambah dependensi HMS Kit (misal Map/Push),
+  Huawei biasanya meminta <meta-data com.huawei.hms.client.appid> diisi App ID
+  dari AGC (AppGallery Connect). Kita akan menambahkannya saat setup SDK.
+
+  CATATAN COMPOSE: Kedua activity memakai theme Material NoActionBar karena
+  app bar digambar sendiri oleh Compose (TopAppBar) - tidak butuh ActionBar
+  bawaan sistem.
+  ============================================================================
+-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- enableEdgeToEdge / status bar transparan ditangani di ui/theme/Theme.kt -->
 
     <application
         android:allowBackup="true"
@@ -10,6 +30,29 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SupaHWKit" />
+        android:theme="@style/Theme.SupaHWKit">
+
+        <!-- ===== MainActivity: dashboard 8 menu kit =====
+             intent-filter ACTION_MAIN + CATEGORY_LAUNCHER menandai Activity ini
+             sebagai pintu masuk aplikasi (ikon yang muncul di launcher HP). -->
+        <activity
+            android:name=".ui.dashboard.MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- ===== KitDetailActivity: halaman demo per-kit =====
+             exported=false -> tidak bisa dipanggil dari aplikasi lain, hanya
+             internal app. Parent activity resmi = MainActivity, membantu
+             sistem memahami hierarki navigasi. -->
+        <activity
+            android:name=".ui.kit.KitDetailActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.dashboard.MainActivity" />
+
+    </application>
 
 </manifest>

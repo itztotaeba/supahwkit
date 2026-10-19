@@ -1,3 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ============================================================================
+  strings.xml - Seluruh teks UI terpusat di sini (best practice Android).
+  ============================================================================
+  Alasan tidak hardcode text di layout/kode:
+  1. Siap lokalisasi (buat values-en/, values-id/ berisi terjemahan).
+  2. Edit teks cukup satu tempat; Compose membacanya via stringResource().
+  %1$d / %1$s adalah placeholder format string yang diisi dari kode
+  lewat stringResource(R.string.xxx, argumen).
+  -->
 <resources>
     <string name="app_name">Supa HW Kit</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">Supa HW Kit</string>
+    <string name="dashboard_subtitle">Kumpulan contoh implementasi Huawei Mobile Services — pilih salah satu kit di bawah (%1$d menu)</string>
+
+    <!-- Aksesibilitas -->
+    <string name="cd_back">Kembali</string>
+
+    <!-- Status halaman detail -->
+    <string name="status_not_implemented">Status: belum diimplementasikan</string>
+    <string name="detail_not_implemented">Demo implementasi untuk %1$s belum dibuat.\n\nHalaman ini adalah kerangka (shell) yang disiapkan sebagai titik masuk. Pada tahap berikutnya, area demo akan diisi contoh pemakaian nyata kit tersebut (misalnya MapView untuk Map Kit atau tombol ambil push token untuk Push Kit).</string>
+    <string name="detail_kit_not_found">Kit tidak dikenali. Silakan buka kembali dari dashboard.</string>
+
+    <!-- ===== 1. Account Kit ===== -->
+    <string name="kit_account_title">Account Kit</string>
+    <string name="kit_account_desc">Sign in dengan Huawei ID &amp; ambil profil pengguna</string>
+    <string name="kit_account_tagline">Login memakai akun Huawei: mengambil OpenID, avatar, dan nama pengguna secara aman.</string>
+
+    <!-- ===== 2. Location Kit ===== -->
+    <string name="kit_location_title">Location Kit</string>
+    <string name="kit_location_desc">Peroleh koordinat lokasi perangkat (GPS &amp; network)</string>
+    <string name="kit_location_tagline">Positioning gabungan GPS, jaringan seluler, dan Wi-Fi lengkap dengan request permission lokasi.</string>
+
+    <!-- ===== 3. Map Kit ===== -->
+    <string name="kit_map_title">Map Kit</string>
+    <string name="kit_map_desc">Tampilkan peta interaktif, marker, dan camera</string>
+    <string name="kit_map_tagline">Rendering peta HMS Map Service: marker, polyline, kontrol kamera, dan info window.</string>
+
+    <!-- ===== 4. Push Kit ===== -->
+    <string name="kit_push_title">Push Kit</string>
+    <string name="kit_push_desc">Token device &amp; terima notifikasi push dari server</string>
+    <string name="kit_push_tagline">Mengambil push token perangkat dan menampilkan pesan yang dikirim dari server lewat Huawei Push.</string>
+
+    <!-- ===== 5. Scan Kit ===== -->
+    <string name="kit_scan_title">Scan Kit</string>
+    <string name="kit_scan_desc">Scan barcode / QR code melalui kamera</string>
+    <string name="kit_scan_tagline">Memindai barcode/QR dengan remote view default maupun custom view kamera sendiri.</string>
+
+    <!-- ===== 6. Text Recognition Kit ===== -->
+    <string name="kit_text_title">Text Recognition Kit</string>
+    <string name="kit_text_desc">Kenali teks dari foto/gambar secara on-device (OCR)</string>
+    <string name="kit_text_tagline">Machine Learning OCR on-device: ekstrak teks dari gambar tanpa koneksi internet.</string>
+
+    <!-- ===== 7. Safety Detect ===== -->
+    <string name="kit_safety_title">Safety Detect</string>
+    <string name="kit_safety_desc">Deteksi root, emulator, &amp; integritas aplikasi</string>
+    <string name="kit_safety_tagline">Deteksi risiko keamanan perangkat: rooted OS, emulator, malware attestation, dan app integrity.</string>
+
+    <!-- ===== 8. FIDO ===== -->
+    <string name="kit_fido_title">FIDO Biometric</string>
+    <string name="kit_fido_desc">Autentikasi biometrik sidik jari / wajah</string>
+    <string name="kit_fido_tagline">Fast Identity Online: login biometrik berbasis standar FIDO dengan pemindai sidik jari/wajah.</string>
 </resources>

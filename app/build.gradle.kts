@@ -1,15 +1,12 @@
 plugins {
     alias(libs.plugins.android.application)
-    // Kotlin plugin: wajib untuk Jetpack Compose (compose compiler adalah
-    // plugin kompiler Kotlin yang mentransformasi fungsi @Composable).
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
 
 android {
     namespace = "com.kinyo.supahwkit"
     compileSdk {
-        version = release(36)
+        version = release(37)
     }
 
     defaultConfig {
@@ -36,15 +33,6 @@ android {
     }
 
     /*
-     * KOTLIN JVM TARGET:
-     * Compose butuh Kotlin >= 1.9; kita set jvmTarget 11 agar konsisten
-     * dengan compileOptions di atas (hindari warning mismatch bytecode).
-     */
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-
-    /*
      * COMPOSE BUILD FEATURE:
      * Membangun pipeline compile khusus untuk fungsi @Composable.
      * Catatan: viewBinding sengaja DIHAPUS karena seluruh UI kini dibuat
@@ -66,6 +54,7 @@ dependencies {
      * vs ui selalu sepasang yang teruji kompatibel).
      */
     implementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(platform(libs.androidx.compose.bom))
 
     // ===== Core UI toolkit =====
     implementation(libs.androidx.ui)               // komponen dasar: Text, Image, Modifier

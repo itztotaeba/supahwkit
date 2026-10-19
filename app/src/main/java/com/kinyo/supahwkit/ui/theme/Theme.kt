@@ -96,8 +96,7 @@ fun SupaHWKitTheme(
     // Buat status bar transparan agar warna latar Compose menyatu dengannya.
     // Side effect seperti ini wajar di komposisi tema (bukan gambar UI murni).
     val view = LocalContext.current as? Activity
-    view?.window?.statusBarColor =
-        if (darkTheme) 0x00000000 else 0x00FFFFFF // 0x00... = fully transparent
+    view?.window?.statusBarColor = android.graphics.Color.TRANSPARENT
 
     // MaterialTheme = "provider" tema. Semua komposisi di dalam content()
     // akan membaca colorScheme + typography yang kita pass ke sini.

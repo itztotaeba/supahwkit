@@ -13,11 +13,3 @@
 .externalNativeBuild
 .cxx
 local.properties
-
-# ===== Huawei AppGallery Connect (AGC) =====
-# agconnect-services.json asli berisi kredensial proyek privat (client_secret,
-# api_key). JANGAN pernah di-commit. Yang di-commit hanyalah TEMPLATE kosong
-# dengan app_id "000000000" agar build tidak gagal; developer mengganti isinya
-# dengan file unduhan dari AGC Console secara lokal.
-app/src/main/agconnect-services.json
-!app/src/main/agconnect-services.template.json

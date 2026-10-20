@@ -1,23 +1,5 @@
 pluginManagement {
     repositories {
-        /*
-         * ====================================================================
-         * REPO PLUGIN HUAWEI (AGCONNECT) - PENAMBAHAN PR INI
-         * ====================================================================
-         * Plugin "com.huawei.agconnect" TIDAK dipublikasikan di Gradle Plugin
-         * Portal maupun google(). Sumber resminya hanya Maven repository
-         * Huawei. Tanpa baris ini, blok plugins{} di app/build.gradle.kts akan
-         * gagal dengan "Plugin [id: 'com.huawei.agconnect'] was not found".
-         * includeGroupByRegex membatasi resolusi HANYA untuk grup com.huawei.*
-         * supaya artefak lain tetap diambil dari sumber resmi AndroidX/Google
-         * (lebih cepat & aman dari dependency confusion).
-         * ====================================================================
-         */
-        maven("https://developer.huawei.com/repo/") {
-            content {
-                includeGroupByRegex("com\\.huawei.*")
-            }
-        }
         google {
             content {
                 includeGroupByRegex("com\\.android.*")

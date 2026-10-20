@@ -1,0 +1,33 @@
+{
+  "_comment": [
+    "========================================================================",
+    "TEMPLATE agconnect-services.json - JANGAN diisi kredensial asli di git.",
+    "========================================================================",
+    "Langkah developer:",
+    "1. Buka https://developer.huawei.com/consumer/en/service/josp/agc/index.html",
+    "2. Pilih proyek -> aplikasi 'com.kinyo.supahwkit' -> Project Settings.",
+    "3. Unduh agconnect-services.json yang ASLI.",
+    "4. Simpan menimpa file ini di lokasi: app/src/main/agconnect-services.json",
+    "   (nama tanpa .template - sudah di-gitignore agar tidak ter-commit).",
+    "",
+    "Plugin com.huawei.agconnect membaca file tsb saat build dan menyuntik",
+    "client.app_id menjadi meta-data 'com.huawei.hms.client.appid' di manifest",
+    "final. Tanpa file ASLI, HMS Account Kit menolak login dengan error:",
+    "  HMSSDK_AGCUtils E: Get client/app_id failed: FileNotFoundException",
+    "  CheckFingerprintRequest E: Failed to check the Fingerprint, appID: null",
+    "========================================================================"
+  ],
+  "client": {
+    "cp_id": "GANTI_DENGAN_CP_ID_ASLI",
+    "product_id": "GANTI_DENGAN_PRODUCT_ID_ASLI",
+    "app_id": "GANTI_DENGAN_APP_ID_ASLI",
+    "package_name": "com.kinyo.supahwkit",
+    "api_version": 99999999,
+    "config_version": "99999999"
+  },
+  "configuration": {},
+  "setting": {
+    "aaid_enabled": true,
+    "push_kit_auto_init_enabled": false
+  }
+}

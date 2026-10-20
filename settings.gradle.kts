@@ -18,6 +18,32 @@ pluginManagement {
                 includeGroupByRegex("com\\.huawei.*")
             }
         }
+
+        /*
+         * ====================================================================
+         * MAPPING PLUGIN ID -> KOORDINAT MAVEN (KRITIS!)
+         * ====================================================================
+         * Saat kita menulis `id("com.huawei.agconnect") version "1.9.1.300"`
+         * di app/build.gradle.kts, Gradle secara default mencari artefak POM
+         * "marker" dengan koordinat:
+         *     com.huawei.agconnect : com.huawei.agconnect.gradle.plugin : 1.9.1.300
+         * FAKTA: Huawei TIDAK mempublikasikan marker POM itu (cek manual ->
+         * developer.huawei.com/repo/.../com.huawei.agconnect.gradle.plugin = 404).
+         * Yang benar-benar ada hanyalah JAR plugin biasa:
+         *     com.huawei.agconnect : agcp : 1.9.1.300
+         * Solusi resmi: blok resolutionStrategy di bawah memetakan plugin id langsung ke artefak
+         * agcp, sehingga error "Plugin [id: 'com.huawei.agconnect'] was not
+         * found" hilang tanpa perlu mengubah cara penulisan di build file.
+         * ====================================================================
+         */
+        resolutionStrategy {
+            eachPlugin {
+                if (requested.id.id == "com.huawei.agconnect") {
+                    useModule("com.huawei.agconnect:agcp:${requested.version}")
+                }
+            }
+        }
+
         google {
             content {
                 includeGroupByRegex("com\\.android.*")
@@ -58,3 +84,23 @@ dependencyResolutionManagement {
 
 rootProject.name = "Supa HW Kit"
 include(":app")
+
+/*
+ * ============================================================================
+ * BUILDSCRIPT ROOT - TRICK "com.android.tools.build:gradle is no set"
+ * ============================================================================
+ * Plugin lama com.huawei.agconnect (agcp) TIDAK memakai mekanisme plugins{}
+ * modern; ia mengharapkan AGP klasik tersedia di classpath buildscript-nya.
+ * Tanpa ini, apply plugin gagal dengan pesan legendaris Huawei:
+ *     "com.android.tools.build:gradle is no set in the build.gradle file"
+ * Kita deklarasikan dependensi ke artefak `com.android.tools.build:gradle`
+ * (yang implementasinya adalah AGP yang sama dengan plugin id
+ * com.android.application) pada root project. Versi diambil dari catalog
+ * supaya tetap sinkron dengan libs.versions.toml (single source of truth).
+ * ============================================================================
+ */
+buildscript {
+    dependencies {
+        classpath("com.android.tools.build:gradle:8.7.3")
+    }
+}

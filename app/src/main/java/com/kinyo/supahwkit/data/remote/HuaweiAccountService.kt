@@ -108,10 +108,10 @@ class HuaweiAccountService(private val context: Context) {
      */
     private val authParams: HuaweiIdAuthParams by lazy {
         /*
-         * HuaweiIdAuthParamsHelper dengan DEFAULT_AUTH_REQUEST_PARAM = mulai dari param default;
-         * kita susun manual lewat helper. createParams() membekukan hasil builder menjadi objek param.
+         * HuaweiIdAuthParams() kosong = mulai dari nol; kita susun manual lewat
+         * helper. createParams() membekukan hasil builder menjadi objek param.
          */
-        HuaweiIdAuthParamsHelper(HuaweiIdAuthParams.DEFAULT_AUTH_REQUEST_PARAM)
+        HuaweiIdAuthParamsHelper(HuaweiIdAuthParams())
             .setId()
             .setProfile()
             .setEmail()

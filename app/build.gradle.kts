@@ -4,37 +4,27 @@
  * ============================================================================
  * android-application : plugin resmi Gradle untuk modul aplikasi Android (APK).
  * kotlin-compose      : plugin Compose Compiler bawaan Kotlin 2.x.
- * kotlin-parcelize    : menggenerasi kode Parcelable otomatis dari @Parcelize.
+ * kotlin-parcelize    : NEW di PR ini -> menggenerasi kode Parcelable otomatis.
  *      Cukup beri anotasi @Parcelize pada data class, plugin membuat isi
  *      CREATOR/writeToParcel() untuk kita (tanpa menulis boilerplate manual).
- * com.huawei.agconnect: NEW di PR ini -> plugin AppGallery Connect (agcp).
- *      Tugasnya saat build: membaca app/src/main/agconnect-services.json,
- *      menyuntikkannya ke resource APK, dan menuliskan meta-data
- *      com.huawei.hms.client.appid ke manifest hasil merge. TANPA plugin ini
- *      SDK HMS tidak menemukan App ID -> login gagal dengan error logcat:
- *      "Get client/app_id failed: FileNotFoundException agconnect-services.json".
- *      Letak: setelah android-application (plugin ini menempelkan task-nya
- *      ke pipeline AGP yang sudah terbentuk).
  * ============================================================================
  */
 plugins {
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.agcp) // com.huawei.agconnect - baca catatan di atas
 }
 
 android {
     namespace = "com.kinyo.supahwkit"
-    // compileSdk 35: diturunkan dari API 37 karena AGP 8.7.3 belum mengenal
-    // API level baru (lihat alasan lengkap di gradle/libs.versions.toml).
-    compileSdk = 35
+    compileSdk {
+        version = release(37)
+    }
 
     defaultConfig {
         applicationId = "com.kinyo.supahwkit"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
@@ -43,21 +33,15 @@ android {
 
     buildTypes {
         release {
-            // AGP 8.x memakai nama properti klasik: isMinifyEnabled/isShrinkResources.
-            // (AGP 9 memakai DSL baru `optimization{}` - tidak tersedia di 8.7.)
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "../src/main/keepRules/rules.keep"
-            )
+            optimization {
+                enable = true
+                packageScope = setOf("androidx.**", "kotlin.**", "kotlinx.**")
+            }
         }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
     }
 
     /*

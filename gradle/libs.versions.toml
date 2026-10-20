@@ -15,7 +15,7 @@ activityCompose = "1.9.3"
 # ===== Huawei Mobile Services (HMS) Core SDK =====
 # hwid = artefak Account Kit (Huawei ID). Versi 6.x adalah garis stabil yang
 # direkomendasikan dokumentasi resmi (https://developer.huawei.com/consumer/en/hms/).
-hmsCore = "6.15.0.300"
+hmsCore = "6.11.0.300"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
